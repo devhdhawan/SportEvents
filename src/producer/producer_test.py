@@ -13,6 +13,7 @@ def send_test_messages():
     for i in range(10):
         data = {
             'match_id': 'MATCH1',
+            'score_id': 'SCORE'+str(i),
             'event': 'score_update',
             'team_a_score': 200 + i,
             'team_b_score': 190 + i,
