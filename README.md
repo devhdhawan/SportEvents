@@ -15,31 +15,18 @@ This project simulates a real-time sports event streaming application similar to
 /sports-event
 │
 ├── src/
-│   ├── producer/           # Kafka producer scripts simulating live data
-│   ├── consumer/           # Kafka consumer scripts processing streams
-│   ├── cache/              # Redis cache management code
-│   ├── web/                # Frontend and backend API server code
-│
-├── docs/                   # Diagrams, architecture, deployment guide
-├── tests/                  # Unit and integration tests
-├── Dockerfile              # Docker container definitions
-├── docker-compose.yml      # Docker Compose orchestration file
-├── README.md               # Project overview and setup
-└── requirements.txt        # Python dependencies
+│   ├── kafka/
+│   │   ├── Producer.py
+│   │   ├── Consumer.py
+│   │   ├── KafkaClientFactory.py
+│   ├── web/
+│   │   └── index.html
+|   |   └── app.py
+├── docs/
+├── tests/
+├── Dockerfile
+├── docker-compose.yml
+├── README.md
+└── requirements.txt
 ```
 
-/sports-event
-│
-├── src/
-│   ├── Producer.py           # Kafka producer scripts simulating live data
-│   ├── Consumer.py          # Kafka consumer scripts processing streams
-│   ├── KafkaClientFactory.py   # Creating Objects for Producer, Consumer and Redis
-│   ├── index.html             # Frontend and backend API server code
-│
-├── docs/                   # Diagrams, architecture, deployment guide
-├── tests/                  # Unit and integration tests
-├── Dockerfile              # Docker container definitions
-├── docker-compose.yml      # Docker Compose orchestration file
-├── README.md               # Project overview and setup
-└── requirements.txt        # Python dependencies
-```
