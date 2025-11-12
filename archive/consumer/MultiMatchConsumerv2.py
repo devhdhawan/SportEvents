@@ -1,4 +1,4 @@
-from kafka import KafkaConsumer
+from KafkaFiles import KafkaConsumer
 from flask_socketio import SocketIO, emit
 from flask import Flask, send_from_directory
 from flask import jsonify
@@ -20,7 +20,7 @@ def handle_connect():
     print("Frontend client connected to WebSocket.")
 
 consumer = KafkaConsumer(
-    "CricketEvent",
+    "CricketEventss",
     bootstrap_servers=['localhost:9092'],
     auto_offset_reset='earliest',
     value_deserializer=lambda m: json.loads(m.decode('utf-8'))
@@ -32,31 +32,26 @@ def consume_event():
         for message in consumer:
             event = message.value
             match_id = event.get('match_id')
+            # Print event value and source metadata
             print(f"Received event: {event}")
+            print(f"From topic: {message.topic}, partition: {message.partition}, offset: {message.offset}")
 
-            # Cache event in Redis
+            ## Cache result into Redis
             redis_key = f"match:{match_id}:latest"
-            redis_client.set(redis_key, json.dumps(event), ex=300)
+            redis_client.set(redis_key,json.dumps(event),ex=300)
             print(f"Cached latest event for match {match_id} to Redis key '{redis_key}'")
-
-            # Fetch from Redis before emitting
-            cached_data = redis_client.get(redis_key)
-            if cached_data:
-                # Decode cached JSON from Redis
-                cached_event = json.loads(cached_data.decode('utf-8'))
-
-                # Emit cached data to WebSocket clients
-                socketio.emit('score_update', cached_event)
-                print(f"Emitted cached event to WebSocket clients for match {match_id}")
+            
+            # Emit score update to the frontend
+            socketio.emit('score_update', event)
+            print(f"Emitted 'score_update' event for match {match_id}")
 
             time.sleep(1)
-
+            
     except Exception as e:
         print(f"Error consuming events: {e}")
     finally:
         consumer.close()
         print("Consumer closed.")
-
 
 @app.route("/")
 def index():

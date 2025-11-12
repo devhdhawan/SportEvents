@@ -16,10 +16,14 @@
             const matchId = data.match_id || "Unknown";
             const battingTeam = data.batting_team || data.team_a || "N/A";
             const bowlingTeam = data.bowling_team || data.team_b || "N/A";
-            const score = data.score || `${data.score_a || 0}-${data.wickets_a || 0}`;
-            const wickets = data.wickets || data.wickets_a || 0;
+            const batting_score = data.batting_score || `${data.score_a || 0}-${data.wickets_a || 0}`;
+            const batting_wickets = data.batting_wickets || data.wickets_a || 0;
+            const bowling_score = data.bowling_score || `${data.score_b || 0}-${data.wickets_a || 0}`;
+            const bowling_wickets = data.bowling_wickets || data.wickets_b || 0;
             const overs = data.overs || 0;
             const balls = data.balls % 6 || 0;
+            const target = data.target || 0;
+            
 
             let matchDiv = document.getElementById(matchId);
             if (!matchDiv) {
@@ -31,8 +35,10 @@
                 <h3>Match: ${matchId}</h3>
                 <p>Batting: ${battingTeam}</p>
                 <p>Bowling: ${bowlingTeam}</p>
-                <p>Score: ${score} / Wickets: ${wickets}</p>
+                <p>${battingTeam} Score: ${batting_score} / Wickets: ${batting_wickets}</p>
+                <p>${bowlingTeam} Score: ${bowling_score} / Wickets: ${bowling_wickets}</p>
                 <p>Overs: ${overs}.${balls}</p>
+                <p>Target: ${target}</p>
                 <hr>
             `;
         }

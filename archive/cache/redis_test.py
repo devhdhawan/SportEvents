@@ -1,4 +1,4 @@
-from kafka import KafkaConsumer
+from KafkaFiles import KafkaConsumer
 import json
 import redis
 
