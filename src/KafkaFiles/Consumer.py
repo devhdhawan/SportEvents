@@ -2,7 +2,6 @@ from .KafkaClientFactory import KafkaClientFactory
 import threading
 import redis
 from flask import Flask
-from flask_socketio import SocketIO
 import json
 import time
 import os

@@ -4,7 +4,7 @@ import os
 # Add the parent directory of 'web' to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-# from KafkaFiles.KafkaClientFactory import KafkaClientFactory
+
 import threading
 import redis
 from flask import Flask
