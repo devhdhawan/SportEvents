@@ -1,4 +1,5 @@
-from .KafkaClientFactory import KafkaClientFactory
+from KafkaFiles.KafkaClientFactory import KafkaClientFactory
+# from .KafkaClientFactory import KafkaClientFactory
 import threading
 import redis
 from flask import Flask

@@ -14,7 +14,7 @@ from flask_socketio import SocketIO
 import json
 import time
 import os
-from KafkaFiles.Consumer import consume_event
+from Consumer.Consumer import consume_event
 
 
 app = Flask(__name__)

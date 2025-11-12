@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consumer-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consumer
+  template:
+    metadata:
+      labels:
+        app: consumer
+    spec:
+      containers:
+      - name: consumer
+        image: himanshud05/consumer:latest
+        ports:
+        - containerPort: 5000
+        env:
+          - name: REDIS_HOST
+            value: "redis-service"  # adjust as per your Redis service name in Kubernetes
+          - name: KAFKA_BOOTSTRAP_SERVERS
+            value: "kafka-service:9092"  # adjust as per your Kafka service name
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: consumer-service
+spec:
+  selector:
+    app: consumer
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  type: NodePort
