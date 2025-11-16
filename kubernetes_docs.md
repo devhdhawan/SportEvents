@@ -1,7 +1,7 @@
 # Kubernetes
 
 ## Build and push your Docker image:
-    docker build -t himanshud05/consumer:latest -f src/consumer/Dockerfile
+    docker build -t himanshud05/consumer:latest -f src/consumer/Dockerfile .
     docker push himanshud05/consumer:latest
 
 ## To check status of Kubernetes cluster please run below command
