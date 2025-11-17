@@ -2,7 +2,7 @@
 FROM python:3.8-slim
 
 # Set working directory
-WORKDIR /app
+WORKDIR /src
 
 # Copy requirements first for caching
 COPY requirements.txt .
@@ -11,10 +11,10 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy all source files
-COPY . .
+COPY ./src .
 
 # Expose port (e.g., Flask default 5000)
 EXPOSE 5000
 
 # Command to run your backend service
-CMD ["python", "server.py"]
+CMD ["python", "web/app.py"]

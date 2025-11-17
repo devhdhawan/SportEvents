@@ -9,10 +9,10 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy source code
-COPY . .
+COPY src/ /app/src/
 
 # Expose port Flask runs on
 EXPOSE 5000
 
 # Entry point to run your consumer Flask app
-CMD ["python", "Consumer.py"]
+CMD ["python", "src/Consumer/Consumer.py"]

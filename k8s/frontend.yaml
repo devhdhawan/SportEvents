@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: himanshud05/frontend:latest  # Replace with your Docker Hub username
+        ports:
+        - containerPort: 5000
+        env:
+          - name: REDIS_HOST
+            value: "redis-service"
+          - name: KAFKA_BOOTSTRAP_SERVERS
+            value: "kafka-service:9092"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: frontend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+  type: LoadBalancer

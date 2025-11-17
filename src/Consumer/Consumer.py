@@ -1,3 +1,10 @@
+import sys
+import os
+
+# Add the parent directory of 'Consumer' to the Python path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+
 from KafkaFiles.KafkaClientFactory import KafkaClientFactory
 # from .KafkaClientFactory import KafkaClientFactory
 import threading
@@ -12,7 +19,8 @@ from flask import send_from_directory
 # app = Flask(__name__)
 # socketio = SocketIO(app, cors_allowed_origins="*")
 
-factory = KafkaClientFactory(bootstrap_servers='localhost:9092')
+bootstrap_servers = os.environ.get('KAFKA_BOOTSTRAP_SERVERS', 'localhost:9092')
+factory = KafkaClientFactory(bootstrap_servers=bootstrap_servers)
 topic = 'Sports'
 consumer = factory.create_consumer(topic)
 redis_client = factory.create_redis_client()
