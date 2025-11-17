@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Sports Scores</title>
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"  crossorigin="anonymous"></script>
+</head>
+<body>
+    <h1>Live Sports Scores</h1>
+    <div id="scores"></div>
+
+    <script>
+        const scoresDiv = document.getElementById('scores');
+
+        // Function to display scores
+        function displayScore(data) {
+            const matchId = data.match_id || "Unknown";
+            const battingTeam = data.batting_team || data.team_a || "N/A";
+            const bowlingTeam = data.bowling_team || data.team_b || "N/A";
+            const batting_score = data.batting_score || `${data.score_a || 0}-${data.wickets_a || 0}`;
+            const batting_wickets = data.batting_wickets || data.wickets_a || 0;
+            const bowling_score = data.bowling_score || `${data.score_b || 0}-${data.wickets_a || 0}`;
+            const bowling_wickets = data.bowling_wickets || data.wickets_b || 0;
+            const overs = data.overs || 0;
+            const balls = data.balls % 6 || 0;
+            const target = data.target || 0;
+            
+
+            let matchDiv = document.getElementById(matchId);
+            if (!matchDiv) {
+                matchDiv = document.createElement('div');
+                matchDiv.id = matchId;
+                scoresDiv.appendChild(matchDiv);
+            }
+            matchDiv.innerHTML = `
+                <h3>Match: ${matchId}</h3>
+                <p>Batting: ${battingTeam}</p>
+                <p>Bowling: ${bowlingTeam}</p>
+                <p>${battingTeam} Score: ${batting_score} / Wickets: ${batting_wickets}</p>
+                <p>${bowlingTeam} Score: ${bowling_score} / Wickets: ${bowling_wickets}</p>
+                <p>Overs: ${overs}.${balls}</p>
+                <p>Target: ${target}</p>
+                <hr>
+            `;
+        }
+
+        // Fetch active matches from backend
+        // fetch('http://localhost:5000/api/active-matches')
+        //     .then(res => res.json())
+        //     .then(matchIds => {
+        //         matchIds.forEach(matchId => {
+        //             // Fetch current score from Redis for each match
+        //             fetch(`http://localhost:5000/api/live-score/${matchId}`)
+        //                 .then(res => res.json())
+        //                 .then(data => {
+        //                     if (!data.error) {
+        //                         displayScore(data);
+        //                     }
+        //                 });
+        //         });
+        //     });
+
+        // Setup WebSocket for real-time updates
+        const socket = io('http://localhost:5000');
+
+        socket.on('connect', () => {
+            console.log('Connected to WebSocket server');
+        });
+
+        socket.on('score_update', (data) => {
+            displayScore(data);
+        });
+    </script>
+</body>
+</html>
