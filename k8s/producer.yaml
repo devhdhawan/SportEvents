@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: producer-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: producer
+  template:
+    metadata:
+      labels:
+        app: producer
+    spec:
+      containers:
+      - name: producer
+        image: himanshud05/producer:latest  # Replace with your Docker Hub username
+        env:
+          - name: KAFKA_BOOTSTRAP_SERVERS
+            value: "kafka-service:9092"

@@ -1,6 +1,8 @@
 import json
 from kafka import KafkaProducer, KafkaConsumer
 import redis
+import time
+from kafka.errors import NoBrokersAvailable
 
 
 class Singleton(type):
@@ -12,13 +14,20 @@ class Singleton(type):
 
 
 class KafkaProducerSingleton(metaclass=Singleton):
-    def __init__(self,bootstrap_servers='localhost:9092', **kwargs):
-        self.producer = KafkaProducer(
-            bootstrap_servers=[bootstrap_servers],
-            value_serializer=kwargs.get('value_serializer', lambda v: json.dumps(v).encode('utf-8')),
-            key_serializer=kwargs.get('key_serializer', lambda k: k.encode('utf-8'))
-        )
-    
+    def __init__(self,bootstrap_servers, **kwargs):
+        for _ in range(5):
+            try:
+                self.producer = KafkaProducer(
+                    bootstrap_servers=[bootstrap_servers],
+                    value_serializer=kwargs.get('value_serializer', lambda v: json.dumps(v).encode('utf-8')),
+                    key_serializer=kwargs.get('key_serializer', lambda k: k.encode('utf-8'))
+                )
+                return
+            except NoBrokersAvailable:
+                print("Waiting for Kafka broker...")
+                time.sleep(5)
+        raise NoBrokersAvailable("Could not connect to Kafka broker")
+
     def get_producer(self):
         return self.producer
 
@@ -27,6 +36,7 @@ class KafkaConsumerSingleton(metaclass=Singleton):
     def __init__(self,topic, group_id=None, auto_offset_reset='earliest',bootstrap_servers='localhost:9092',**kwargs):
         self.consumer = KafkaConsumer(
             topic,
+            bootstrap_servers=[bootstrap_servers],
             group_id=group_id,
             auto_offset_reset=auto_offset_reset,
             value_deserializer= (lambda m: json.loads(m.decode('utf-8'))))
@@ -49,7 +59,7 @@ class KafkaClientFactory:
         return KafkaProducerSingleton(self.bootstrap_servers,**kwargs).get_producer()
 
     def create_consumer(self, topic, group_id=None, auto_offset_reset='earliest', **kwargs):
-        return KafkaConsumerSingleton(topic, group_id, auto_offset_reset, **kwargs).get_consumer()
+        return KafkaConsumerSingleton(topic, group_id, auto_offset_reset, bootstrap_servers=self.bootstrap_servers, **kwargs).get_consumer()
 
     def create_redis_client(self, host='localhost', port=6379, db=0):
         return RedisClassSingleton(host, port, db).get_redis_client()

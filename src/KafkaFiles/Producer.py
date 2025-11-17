@@ -1,4 +1,11 @@
-from KafkaClientFactory import KafkaClientFactory
+import os
+import sys
+import os
+
+# Add the parent directory of 'KafkaFiles' to the Python path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from KafkaFiles.KafkaClientFactory import KafkaClientFactory
 import threading
 import time
 import random
@@ -66,7 +73,8 @@ def simulate_match(producer,topic,match_id, teams_a,team_b):
     team_b_score,teams_b_wickets = simulate_innings(producer,topic,match_id, team_b, teams_a,5,True,team_a_score,team_a_wickets)
 
 def main():
-    factory = KafkaClientFactory(bootstrap_servers='localhost:9092')
+    bootstrap_servers = os.environ.get('KAFKA_BOOTSTRAP_SERVERS', 'localhost:9092')
+    factory = KafkaClientFactory(bootstrap_servers=bootstrap_servers)
     producer = factory.create_producer()
     topic = 'Sports'
 

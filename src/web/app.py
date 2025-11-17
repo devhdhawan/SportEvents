@@ -29,4 +29,4 @@ def index():
 
 if __name__ == "__main__":
     threading.Thread(target=consume_event,args=(socketio,), daemon=True).start()
-    socketio.run(app, host='0.0.0.0', port=5000)
+    socketio.run(app, host='0.0.0.0', port=5000, allow_unsafe_werkzeug=True)
